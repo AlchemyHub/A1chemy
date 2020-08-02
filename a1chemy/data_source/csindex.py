@@ -1,6 +1,6 @@
-import json
-
 import xlrd
+
+from a1chemy.util import write_data_to_json_file
 
 
 def parse_csi_index_xls(source, target):
@@ -15,10 +15,7 @@ def parse_csi_index_xls(source, target):
             'name': row[5]
         }
         result.append(d)
-    json_data = json.dumps(result, ensure_ascii=False)
-    fh = open(target, 'w', encoding='utf-8')
-    fh.write(json_data)
-    fh.close()
+    write_data_to_json_file(data=result, path=target)
 
 
 class CSIndex(object):

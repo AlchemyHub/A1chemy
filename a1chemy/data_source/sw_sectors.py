@@ -1,5 +1,6 @@
-import json
 import re
+
+from a1chemy.util import write_data_to_json_file
 
 
 def parse_sw_sectors(source, target):
@@ -20,7 +21,4 @@ def parse_sw_sectors(source, target):
             }
         )
     print("total row data length:" + str(len(result)))
-    json_data = json.dumps(result, ensure_ascii=False)
-    fh = open(target, 'w', encoding='utf-8')
-    fh.write(json_data)
-    fh.close()
+    write_data_to_json_file(data=result, path=target)
