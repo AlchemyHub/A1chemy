@@ -1,16 +1,28 @@
 import pandas as pd
 
-from a1chemy.common import OPEN, CLOSE, HIGH, LOW, AMOUNT, VOLUME
+from a1chemy.common import OPEN, CLOSE, HIGH, LOW, AMOUNT, VOLUME, INDEX
 
 
-class Stock(object):
+class Ticks(object):
     exchange = ''
+    symbol = ''
     name = ''
     currency = ''
-    __raw_data: pd.DataFrame
+    raw_data: pd.DataFrame
+
+    def __init__(self, exchange=None, symbol=None, name=None, currency=None, raw_data=None) -> None:
+        super().__init__()
+        self.exchange = exchange
+        self.symbol = symbol
+        self.name = name
+        self.currency = currency
+        self.raw_data = raw_data
 
     def get_column_data(self, key: str):
-        return self.__raw_data[key]
+        return self.raw_data[key]
+
+    def index(self):
+        return self.get_column_data(INDEX)
 
     def open(self):
         return self.get_column_data(OPEN)

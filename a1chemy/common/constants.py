@@ -1,3 +1,4 @@
+INDEX: str = 'time'
 OPEN: str = 'open'
 CLOSE: str = 'close'
 HIGH: str = 'high'
