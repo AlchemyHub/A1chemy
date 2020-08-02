@@ -70,6 +70,7 @@ terminado==0.8.3
 testpath==0.4.4
 toml==0.10.1
 tornado==6.0.4
+tqdm==4.48.0
 traitlets==4.3.3
 tushare==1.2.60
 urllib3==1.25.10
