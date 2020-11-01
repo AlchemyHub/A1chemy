@@ -49,3 +49,21 @@ class Ticks(object):
         @return:
         """
         return self.get_column_data(VOLUME)
+
+    def to_dict(self):
+        return {
+            "symbol": self.symbol,
+            "name": self.name,
+            "exchange": self.exchange,
+            "currency": self.currency,
+            "ticks": self.raw_data.to_dict('records')
+        }
+
+    @classmethod
+    def from_dict(cls, dict_data):
+        return cls(exchange=dict_data.get('exchange', ''),
+                   symbol=dict_data['symbol'],
+                   name=dict_data.get('name', ''),
+                   currency=dict_data.get('currency', ''),
+                   raw_data=pd.DataFrame.from_records(dict_data['ticks']),
+                   )

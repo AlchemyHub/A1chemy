@@ -60,11 +60,13 @@ class XueQiuDataParser(object):
         response = requests.get('https://stock.xueqiu.com/v5/stock/chart/kline.json',
                                 headers=headers, params=params, cookies=post_cookies)
         data = response.json()
-        column_name = data['data']['column']
+        column_name = data['data']['column'][:6]
         column_name[0] = INDEX
         items = data['data']['item']
+        new_items = []
         for item in items:
             item[0] = pd.Timestamp(item[0] / 1000, unit='s', tz=tz)
+            new_items.append(item[:6])
 
         return Ticks(exchange=symbol[0:2], symbol=symbol, currency='CNY',
-                     raw_data=pd.DataFrame(data=items, columns=column_name))
+                     raw_data=pd.DataFrame(data=new_items, columns=column_name))
