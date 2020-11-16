@@ -1,4 +1,6 @@
+from a1chemy.common.constants import INDEX
 from a1chemy.common.ticks import Ticks
+import pandas as pd
 
 
 class MongoTicks(object):
@@ -38,8 +40,14 @@ class MongoTicks(object):
         }
         if exchange is not None:
             query['exchange'] = exchange
-        return Ticks.from_dict(self.ticks_collection.find_one(query))
+        return ticks_wrapper(self.ticks_collection.find_one(query))
 
     def find(self, query):
         data = self.ticks_collection.find(query)
-        return [Ticks.from_dict(d) for d in data]
+        return [ticks_wrapper(d) for d in data]
+
+    
+def ticks_wrapper(data):
+        ticks = Ticks.from_dict(data)
+        ticks.raw_data[INDEX] =  pd.to_datetime(ticks.raw_data[INDEX], unit='s').dt.tz_localize('Europe/London')
+        return ticks

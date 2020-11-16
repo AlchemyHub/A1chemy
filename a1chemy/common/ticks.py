@@ -49,6 +49,9 @@ class Ticks(object):
         @return:
         """
         return self.get_column_data(VOLUME)
+    
+    def convert_tz(self, tz=None):
+        self.raw_data[INDEX] =  pd.to_datetime(self.raw_data[INDEX], unit='s').dt.tz_convert(tz)
 
     def to_dict(self):
         return {
