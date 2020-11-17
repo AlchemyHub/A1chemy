@@ -4,12 +4,13 @@ import time
 
 from a1chemy.common import INDEX
 from a1chemy.common.ticks import Ticks
+from a1chemy.common import Statistics
 
 
 class XueQiuDataParser(object):
     cookies = {}
 
-    def __init__(self, cookies=None):
+    def __init__(self, cookies=None, headers=None):
         if cookies is not None:
             self.cookies = cookies
         else:
@@ -28,6 +29,34 @@ class XueQiuDataParser(object):
                 'is_overseas': '0',
                 # 'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1595772143',
             }
+
+    def get_all_stocks(self, page=1, size=5000, headers=None):
+        if headers is None:
+            headers = {
+                'Connection': 'keep-alive',
+                'Accept': '*/*',
+                'cache-control': 'no-cache',
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Dest': 'empty',
+                'Referer': 'https://xueqiu.com/hq',
+                'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,zh-TW;q=0.7',
+            }
+        params = (
+            ('page', page),
+            ('size', size),
+            ('order', 'desc'),
+            ('orderby', 'percent'),
+            ('order_by', 'percent'),
+            ('market', 'CN'),
+            ('type', 'sh_sz'),
+            ('_', str(int(round(time.time() * 1000)))),
+        )
+        response = requests.get('https://xueqiu.com/service/v5/stock/screener/quote/list', headers=headers, params=params, cookies=self.cookies)
+        data = response.json()
+        return [dict_to_statistics(d) for d in data['data']['list']]
 
     def history(self, headers=None, cookies=None, symbol: str = None, period: str = None, count=672,
                 tz="Asia/Shanghai") -> Ticks:
@@ -56,7 +85,6 @@ class XueQiuDataParser(object):
         )
 
         post_cookies = cookies if cookies is not None else self.cookies
-
         response = requests.get('https://stock.xueqiu.com/v5/stock/chart/kline.json',
                                 headers=headers, params=params, cookies=post_cookies)
         data = response.json()
@@ -70,3 +98,7 @@ class XueQiuDataParser(object):
 
         return Ticks(exchange=symbol[0:2], symbol=symbol, currency='CNY',
                      raw_data=pd.DataFrame(data=new_items, columns=column_name))
+
+
+def dict_to_statistics(data):
+    return Statistics(name=data['name'], symbol=data['symbol'], exchange=data['symbol'][0:2])
