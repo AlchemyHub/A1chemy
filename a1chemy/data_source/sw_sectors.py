@@ -15,6 +15,7 @@ def parse_sw_sectors(source, target):
             '601') or symbol_suffix.startswith('603') else 'SZ'
         result.append(
             {
+                'exchange': exchange,
                 'symbol': exchange + symbol_suffix,
                 'sector': row_data[4],
                 'name': row_data[12]

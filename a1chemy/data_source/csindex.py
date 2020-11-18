@@ -28,6 +28,7 @@ def parse_csi_index_xls(source, target):
         row = table.row_values(i)
         exchange = 'SH' if row[7] == 'SHH' else 'SZ'
         d = {
+            'exchange': exchange,
             'symbol': exchange + row[4],
             'name': row[5]
         }

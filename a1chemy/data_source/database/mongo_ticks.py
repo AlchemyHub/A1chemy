@@ -46,8 +46,9 @@ class MongoTicks(object):
         data = self.ticks_collection.find(query)
         return [ticks_wrapper(d) for d in data]
 
-    
+
 def ticks_wrapper(data):
-        ticks = Ticks.from_dict(data)
-        ticks.raw_data[INDEX] =  pd.to_datetime(ticks.raw_data[INDEX], unit='s').dt.tz_localize('Europe/London')
-        return ticks
+    ticks = Ticks.from_dict(data)
+    ticks.raw_data[INDEX] = pd.to_datetime(
+        ticks.raw_data[INDEX], unit='s').dt.tz_localize('Europe/London')
+    return ticks
