@@ -70,3 +70,6 @@ class Ticks(object):
                    currency=dict_data.get('currency', ''),
                    raw_data=pd.DataFrame.from_records(dict_data['ticks']),
                    )
+    
+    def to_tag_id(self):
+        return self.exchange + "_" + self.symbol

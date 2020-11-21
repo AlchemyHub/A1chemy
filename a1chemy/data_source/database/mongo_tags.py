@@ -1,5 +1,5 @@
 from a1chemy.common import Tag
-
+import itertools
 
 class MongoTags(object):
     mongo_client = None
@@ -13,7 +13,16 @@ class MongoTags(object):
 
     def find(self, id=None):
         data = self.tags_collection.find_one({'id': id})
-        return Tag(id=data['id'], values=data['values'])
+        return Tag(data)
+    
+    def find_children(self, id_list=None):
+        query = {
+            'parent': {
+                '$in': id_list
+            }
+        }
+        data = self.tags_collection.find(query)
+        return dict((k, list(map(lambda x:Tag(x), values))) for k, values in itertools.groupby(data, key=lambda x:x['parent']))
 
     def delete(self, id=None):
         return self.tags_collection.delete_many({'id': id})

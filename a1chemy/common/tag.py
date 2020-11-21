@@ -3,7 +3,8 @@ import enum
 
 class Tag(object):
     id = ''
-    values = []
+    parent=''
+    values = {}
 
     def __init__(self, *initial_data, **kwargs):
         for dictionary in initial_data:
@@ -15,5 +16,6 @@ class Tag(object):
     def to_dict(self):
         return {
             'id': self.id,
+            'parent': self.parent,
             'values': self.values
         }
