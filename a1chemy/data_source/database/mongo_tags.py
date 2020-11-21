@@ -14,11 +14,20 @@ class MongoTags(object):
     def find(self, id=None):
         data = self.tags_collection.find_one({'id': id})
         return Tag(data)
+
+    def tree(self, id=None):
+        root = self.find(id=id)
+        parent_list = [root.id]
+        children = {}
+        while not parent_list:
+            
+
+        
     
-    def find_children(self, id_list=None):
+    def find_children(self, parent_list=None):
         query = {
             'parent': {
-                '$in': id_list
+                '$in': parent_list
             }
         }
         data = self.tags_collection.find(query)
