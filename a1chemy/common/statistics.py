@@ -9,3 +9,6 @@ class Statistics(object):
                 setattr(self, key, dictionary[key])
         for key in kwargs:
             setattr(self, key, kwargs[key])
+    
+    def to_tag_id(self):
+        return self.exchange + "_" + self.symbol

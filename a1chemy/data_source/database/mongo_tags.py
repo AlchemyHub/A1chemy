@@ -22,7 +22,6 @@ class MongoTags(object):
         tree = Tree(root=root)
         parent_id_list = [root.id]
         while parent_id_list:
-            print(parent_id_list)
             children_dict = self.find_children(parent_list=parent_id_list)
             next_parent_id_list = []
             for parent, children in children_dict.items():

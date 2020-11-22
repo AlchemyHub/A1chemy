@@ -3,7 +3,7 @@ import re
 from a1chemy.util import write_data_to_json_file
 
 
-def parse_sw_sectors(source, target):
+def parse_sw_sectors(source):
     fd = open(source)
     li = fd.readlines()
     print(len(li))
@@ -22,4 +22,8 @@ def parse_sw_sectors(source, target):
             }
         )
     print("total row data length:" + str(len(result)))
+    return result
+
+def parse_sw_sectors_save_to_file(source, target):
+    result = parse_sw_sectors(source=source)
     write_data_to_json_file(data=result, path=target)
