@@ -1,4 +1,4 @@
 from .constants import *
 from .ticks import Ticks
-from .tag import Tag
+from .tag import Tag, TreeNode, Tree
 from .statistics import Statistics
