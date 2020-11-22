@@ -2,16 +2,11 @@ import enum
 
 
 class Tag(object):
-    id = ''
-    parent = ''
-    values = {}
 
-    def __init__(self, *initial_data, **kwargs):
-        for dictionary in initial_data:
-            for key in dictionary:
-                setattr(self, key, dictionary[key])
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
+    def __init__(self, id, parent=None, values={}):
+        self.id = id
+        self.parent = parent
+        self.values = values
 
     def to_dict(self):
         return {
@@ -22,12 +17,12 @@ class Tag(object):
 
 
 class TreeNode(Tag):
-    children = {}
 
     def __init__(self, root: Tag) -> None:
         self.id = root.id
         self.parent = root.parent
         self.values = root.values
+        self.children = {}
 
     def add_child(self, child: 'TreeNode'):
         self.children[child.id] = child
@@ -37,12 +32,11 @@ class TreeNode(Tag):
 
 
 class Tree(object):
-    index_map = {}
-    root = None
 
     def __init__(self, root: Tag) -> None:
         root_tree_node = TreeNode(root=root)
         self.root = root_tree_node
+        self.index_map = {}
         self.index_map[root.id] = root_tree_node
 
     def add_relation(self, parent, children) -> bool:

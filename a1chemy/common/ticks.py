@@ -4,11 +4,6 @@ from a1chemy.common import OPEN, CLOSE, HIGH, LOW, AMOUNT, VOLUME, INDEX
 
 
 class Ticks(object):
-    exchange = ''
-    symbol = ''
-    name = ''
-    currency = ''
-    raw_data: pd.DataFrame
 
     def __init__(self, exchange=None, symbol=None, name=None, currency=None, raw_data=None) -> None:
         super().__init__()
