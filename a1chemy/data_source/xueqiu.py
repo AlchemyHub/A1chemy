@@ -54,11 +54,12 @@ class XueQiuDataParser(object):
             ('type', 'sh_sz'),
             ('_', str(int(round(time.time() * 1000)))),
         )
-        response = requests.get('https://xueqiu.com/service/v5/stock/screener/quote/list', headers=headers, params=params, cookies=self.cookies)
+        response = requests.get('https://xueqiu.com/service/v5/stock/screener/quote/list',
+                                headers=headers, params=params, cookies=self.cookies)
         data = response.json()
         return [dict_to_statistics(d) for d in data['data']['list']]
 
-    def history(self, headers=None, cookies=None, symbol: str = None, period: str = None, count=672,
+    def history(self, headers=None, cookies=None, symbol: str = None, exchange=None, period: str = None, count=672,
                 tz="Asia/Shanghai") -> Ticks:
         if headers is None:
             headers = {
@@ -96,7 +97,7 @@ class XueQiuDataParser(object):
             item[0] = pd.Timestamp(item[0] / 1000, unit='s', tz=tz)
             new_items.append(item[:6])
 
-        return Ticks(exchange=symbol[0:2], symbol=symbol, currency='CNY',
+        return Ticks(exchange=exchange, symbol=symbol, currency='CNY',
                      raw_data=pd.DataFrame(data=new_items, columns=column_name))
 
 
