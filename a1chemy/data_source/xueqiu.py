@@ -59,6 +59,40 @@ class XueQiuDataParser(object):
         data = response.json()
         return [dict_to_statistics(d, exchange_extractor) for d in data['data']['list']]
 
+    def list(self, size=1000, pid=13, category=1, headers=None):
+        if headers is None:
+            headers = {
+                'Connection': 'keep-alive',
+                'Accept': 'application/json, text/plain, */*',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
+                'Origin': 'https://xueqiu.com',
+                'Sec-Fetch-Site': 'same-site',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Dest': 'empty',
+                'Referer': 'https://xueqiu.com/',
+                'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,zh-TW;q=0.7',
+            }
+
+        params = (
+            ('size', str(size)),
+            ('pid', str(pid)),
+            ('category', str(category)),
+        )
+        response = requests.get('https://stock.xueqiu.com/v5/stock/portfolio/stock/list.json',
+                                headers=headers, params=params, cookies=self.cookies)
+        data = response.json()
+
+        def dict_convert(d):
+            exchange = d['exchange']
+            if exchange == 'HK':
+                exchange = 'HKEX'
+            return Statistics(
+                name=d['name'],
+                symbol=d['symbol'],
+                exchange=exchange
+            )
+        return [dict_convert(d) for d in data['data']['stocks']]
+
     def history(self, headers=None, cookies=None, symbol: str = None, exchange=None, period: str = None, count=672,
                 tz="Asia/Shanghai") -> Ticks:
         if headers is None:
@@ -102,6 +136,7 @@ class XueQiuDataParser(object):
 
 
 def dict_to_statistics(data, exchange_extractor):
-    s = Statistics(name=data['name'], symbol=data['symbol'], exchange=data['symbol'][0:2])
+    s = Statistics(name=data['name'], symbol=data['symbol'],
+                   exchange=data['symbol'][0:2])
     s.exchange = exchange_extractor(data['symbol'])
     return s
