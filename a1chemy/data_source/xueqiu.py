@@ -30,7 +30,7 @@ class XueQiuDataParser(object):
                 # 'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1595772143',
             }
 
-    def get_all_stocks(self, page=1, size=5000, headers=None):
+    def get_all_stocks(self, page=1, size=5000, market='CN', exchange_type='sh_sz', exchange_extractor=None, headers=None):
         if headers is None:
             headers = {
                 'Connection': 'keep-alive',
@@ -50,14 +50,14 @@ class XueQiuDataParser(object):
             ('order', 'desc'),
             ('orderby', 'percent'),
             ('order_by', 'percent'),
-            ('market', 'CN'),
-            ('type', 'sh_sz'),
+            ('market', market),
+            ('type', exchange_type),
             ('_', str(int(round(time.time() * 1000)))),
         )
         response = requests.get('https://xueqiu.com/service/v5/stock/screener/quote/list',
                                 headers=headers, params=params, cookies=self.cookies)
         data = response.json()
-        return [dict_to_statistics(d) for d in data['data']['list']]
+        return [dict_to_statistics(d, exchange_extractor) for d in data['data']['list']]
 
     def history(self, headers=None, cookies=None, symbol: str = None, exchange=None, period: str = None, count=672,
                 tz="Asia/Shanghai") -> Ticks:
@@ -101,5 +101,7 @@ class XueQiuDataParser(object):
                      raw_data=pd.DataFrame(data=new_items, columns=column_name))
 
 
-def dict_to_statistics(data):
-    return Statistics(name=data['name'], symbol=data['symbol'], exchange=data['symbol'][0:2])
+def dict_to_statistics(data, exchange_extractor):
+    s = Statistics(name=data['name'], symbol=data['symbol'], exchange=data['symbol'][0:2])
+    s.exchange = exchange_extractor(data['symbol'])
+    return s
