@@ -30,7 +30,7 @@ class XueQiuDataParser(object):
                 # 'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1595772143',
             }
 
-    def get_all_stocks(self, page=1, size=5000, market='CN', exchange_type='sh_sz', exchange_extractor=None, headers=None):
+    def get_all_stocks(self, params = None, headers=None, url=None, exchange_extractor = None):
         if headers is None:
             headers = {
                 'Connection': 'keep-alive',
@@ -44,20 +44,12 @@ class XueQiuDataParser(object):
                 'Referer': 'https://xueqiu.com/hq',
                 'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,zh-TW;q=0.7',
             }
-        params = (
-            ('page', page),
-            ('size', size),
-            ('order', 'desc'),
-            ('orderby', 'percent'),
-            ('order_by', 'percent'),
-            ('market', market),
-            ('type', exchange_type),
-            ('_', str(int(round(time.time() * 1000)))),
-        )
-        response = requests.get('https://xueqiu.com/service/v5/stock/screener/quote/list',
-                                headers=headers, params=params, cookies=self.cookies)
+        if url is None:
+            url = 'https://xueqiu.com/service/v5/stock/screener/quote/list'
+        response = requests.get(url, headers=headers, params=params, cookies=self.cookies)
         data = response.json()
         return [dict_to_statistics(d, exchange_extractor) for d in data['data']['list']]
+        
 
     def list(self, size=1000, pid=13, category=1, headers=None):
         if headers is None:
