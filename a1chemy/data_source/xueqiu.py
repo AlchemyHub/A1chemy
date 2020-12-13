@@ -10,25 +10,24 @@ from a1chemy.common import Statistics
 class XueQiuDataParser(object):
     cookies = {}
 
-    def __init__(self, cookies=None, headers=None):
+    def __init__(self, cookies=None):
         if cookies is not None:
             self.cookies = cookies
         else:
-            self.cookies = {
-                'bid': '783ea5e048552adebcc2fb818cf94d7a_k3l4dhqh',
-                'device_id': '8c96397a28a84671916e3a10765b3b41',
-                'remember': '1',
-                'xq_a_token': 'f972669f35f84421759fc9a83064e421b241699e',
-                'xq_id_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjkzMDk1ODc2OTgsImlzcyI6InVjIiwiZXhwIjoxNTk4MTc1NDAwLCJjdG0iOjE1OTU2NTQ5MjIzNjIsImNpZCI6ImQ5ZDBuNEFadXAifQ.Wy1Mk7nLW58sLAkQgVcL7TfTWuQUk0BlV78pDxYQO5QRFqD3UTgGQfy7CRNpkbdJxjw8tUH5xdnpUIAcDaEVqMdt4yqQ26odGoBvsyhXpA7oSTjiLVrzvkHuMBj9DrAiIasXvt62PI_TuBzLYbr-0NYuhEwxTfO_kVPjVEtx_C5T-9Hx8WeejJMH3q4VGaN0A87KYvsP2TYU086bLbU6DgprozPYKF2DRFVXtSneyHurbtZVfdd8xxlRzXli_SQeOqpzl_LdDzG_3Aig-v3iW2ZNadbKLSgd5RnAHv4KVYFL9-rO-WB0fteFhhhJ-7-ipph96fa8QU7jzYV7fJwXhg',
-                'xqat': 'f972669f35f84421759fc9a83064e421b241699e',
-                'xq_r_token': '166d455e8c8f9bf3e6a41873d6d9aeff8a1a378f',
-                'xq_is_login': '1',
-                'u': '9309587698',
-                's': 'do1967dh94',
-                # 'Hm_lvt_1db88642e346389874251b5a1eded6e3': '1595653582,1595756736,1595758371,1595758396',
-                'is_overseas': '0',
-                # 'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1595772143',
+            h = {
+                'Connection': 'keep-alive',
+                'Accept': '*/*',
+                'cache-control': 'no-cache',
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Dest': 'empty',
+                'Referer': 'https://xueqiu.com',
+                'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8,zh-TW;q=0.7',
             }
+            response = requests.get('https://xueqiu.com/', headers=h)
+            self.cookies = response.cookies
 
     def get_all_stocks(self, params = None, headers=None, url=None, exchange_extractor = None):
         if headers is None:
