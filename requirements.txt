@@ -30,6 +30,7 @@ jupyter-highlight-selected-word==0.2.0
 jupyter-latex-envs==1.4.6
 jupyter-nbextensions-configurator==0.4.1
 jupyterthemes==0.20.0
+kaleido==0.1.0
 kiwisolver==1.2.0
 lesscpy==0.14.0
 lxml==4.5.2
@@ -53,6 +54,7 @@ pluggy==0.13.1
 ply==3.11
 prometheus-client==0.8.0
 prompt-toolkit==3.0.5
+psutil==5.7.3
 ptyprocess==0.6.0
 py==1.9.0
 pycodestyle==2.6.0
