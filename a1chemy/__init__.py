@@ -3,3 +3,4 @@ from a1chemy.data_source import *
 from a1chemy.util import *
 from a1chemy.strategy import *
 import a1chemy.indicators
+from a1chemy.plot import *
