@@ -4,9 +4,6 @@ import pandas as pd
 
 
 class MongoTicks(object):
-    mongo_client = None
-    db = None
-    ticks_collection = None
 
     def __init__(self, mongo_client) -> None:
         self.mongo_client = mongo_client
