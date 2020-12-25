@@ -6,9 +6,38 @@ import pandas as pd
 
 def ticks_thumbnail(ticks=None, start=None, end=None, width=120, height=30):
     df = ticks.raw_data.iloc[start:end]
+    return line_thumbnail(df, x_axis='time', y_axis='close', width=width, height=height)
+    # min = df['close'].min()
+    # max = df['close'].max()
+    # def _color_getter(x):
+    #     if x == min:
+    #         return "red"
+    #     elif x == max:
+    #         return "green"
+    #     else:
+    #         return "yellow"
+    
+    # def _size_getter(x):
+    #     if x == min or x == max:
+    #         return 8
+    #     else:
+    #         return 0
 
-    min = df['close'].min()
-    max = df['close'].max()
+    # layout = go.Layout(autosize=True, margin={'l': 0, 'r': 0, 't': 0, 'b': 0}, xaxis = dict(type="category"))
+    # fig = go.Figure(layout=layout, data=[
+    #                 go.Scatter(x=df['time'],
+    #                            y=df['close'],
+    #                            mode='markers+lines',
+    #                            marker = dict(size=list(map(_size_getter, df['close'])), color=list(map(_color_getter, df['close']))),
+    #                            )
+    #                 ]
+    #                 )
+    # fig.update_layout(xaxis_visible=False, yaxis_visible=False)
+    # return Image(pio.to_image(fig, format='png', engine="kaleido", width=width, height=height))
+
+def line_thumbnail(data=None, x_axis=None, y_axis=None, width=120, height=30):
+    min = data[y_axis].min()
+    max = data[y_axis].max()
     def _color_getter(x):
         if x == min:
             return "red"
@@ -25,17 +54,13 @@ def ticks_thumbnail(ticks=None, start=None, end=None, width=120, height=30):
 
     layout = go.Layout(autosize=True, margin={'l': 0, 'r': 0, 't': 0, 'b': 0}, xaxis = dict(type="category"))
     fig = go.Figure(layout=layout, data=[
-                    go.Scatter(x=df['time'],
-                               y=df['close'],
+                    go.Scatter(x=data[x_axis],
+                               y=data[y_axis],
                                mode='markers+lines',
-                               marker = dict(size=list(map(_size_getter, df['close'])), color=list(map(_color_getter, df['close']))),
+                               marker = dict(size=list(map(_size_getter, data[y_axis])), color=list(map(_color_getter, data[y_axis]))),
                                )
                     ]
                     )
-    # remove missing timestamps from visualization
-    # fig.update_xaxes(
-    #     rangebreaks=[dict(values=dt_breaks)]  # hide timestamps with no values
-    # )
     fig.update_layout(xaxis_visible=False, yaxis_visible=False)
     return Image(pio.to_image(fig, format='png', engine="kaleido", width=width, height=height))
 
