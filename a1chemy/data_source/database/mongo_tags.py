@@ -16,7 +16,7 @@ class MongoTags(object):
 
     def find(self, id=None):
         data = self.tags_collection.find_one({'id': id})
-        return Tag(id=data['id'], parent=data.get('parent', None), values = data.get('values', None))
+        return Tag(id=data['id'], parent=data.get('parent', None), values=data.get('values', None))
 
     def tree(self, id=None):
         root = self.find(id=id)
@@ -39,10 +39,13 @@ class MongoTags(object):
             }
         }
         data = self.tags_collection.find(query)
-        return dict((k, list(map(lambda x: Tag(id=x['id'], parent=x.get('parent', None), values = x.get('values', None)), values))) for k, values in itertools.groupby(data, key=lambda x: x['parent']))
+        return dict((k, list(map(lambda x: Tag(id=x['id'], parent=x.get('parent', None), values=x.get('values', None)), values))) for k, values in itertools.groupby(sorted(data, key=lambda x: x['parent']), key=lambda x: x['parent']))
 
     def delete(self, id=None):
         return self.tags_collection.delete_many({'id': id})
+
+    def delete_by_parent(self, parent=None):
+        return self.tags_collection.delete_many({'parent': parent})
 
     def insert(self, tag: Tag = None):
         """
@@ -50,7 +53,7 @@ class MongoTags(object):
         """
         query = {
             'id': tag.id,
-            'parent':tag.parent
+            'parent': tag.parent
         }
         new_value = {
             '$set': tag.to_dict()

@@ -12,7 +12,7 @@ def parse_sw_sectors(source):
         row_data = re.split('<|>', li[i])
         symbol_suffix = row_data[8]
         exchange = 'SH' if symbol_suffix.startswith('600') or symbol_suffix.startswith(
-            '601') or symbol_suffix.startswith('603') else 'SZ'
+            '601') or symbol_suffix.startswith('603') or symbol_suffix.startswith('688') else 'SZ'
         result.append(
             {
                 'exchange': exchange,
