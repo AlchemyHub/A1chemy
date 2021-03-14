@@ -70,6 +70,17 @@ def grabFundData(nation_tag_id, params, url, exchange_extractor):
         except Exception as e:
             print("exception when get data, name=" + stock.name)
             print(e)
+def grabLofData(nation_tag_id, params, url, exchange_extractor):
+    all_stocks=xueqiu_client.get_all_stocks(params=params, url=url, exchange_extractor=exchange_extractor)
+    for stock in tqdm(all_stocks):
+        try:
+#             time.sleep(random.uniform(0.1,0.3))
+            fund_data = jisilu_client.get_lof_info(symbol=stock.symbol, exchange=stock.exchange, name=stock.name)
+            mongo_fund.delete(exchange=None, symbol=fund_data.symbol)
+            mongo_fund.upsert(exchange=fund_data.exchange, symbol=fund_data.symbol, fund=fund_data)
+        except Exception as e:
+            print("exception when get data, name=" + stock.name)
+            print(e)
 
 cn_stock_params = (
             ('page', 1),
@@ -120,6 +131,7 @@ grabNationData(nation_tag_id='cn_lof', params=cn_lof_params, url=etf_url, exchan
 grabTicksData(nation_tag_id='cn_lof', params=cn_lof_params, url=etf_url, exchange_extractor=lambda x:x[0:2])
 
 grabFundData(nation_tag_id='cn_etf', params=cn_etf_params, url=etf_url, exchange_extractor=lambda x:x[0:2])
+grabLofData(nation_tag_id='cn_lof', params=cn_lof_params, url=etf_url, exchange_extractor=lambda x:x[0:2])
 
 grabNationData(nation_tag_id='cn_stock', params=cn_stock_params, url=None, exchange_extractor=lambda x:x[0:2])
 grabTicksData(nation_tag_id='cn_stock', params=cn_stock_params, url=None, exchange_extractor=lambda x:x[0:2])
