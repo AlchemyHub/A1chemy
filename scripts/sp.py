@@ -139,21 +139,25 @@ grabNationData(nation_tag_id='hk_stock', params=hk_stock_params, url=None, excha
 grabTicksData(nation_tag_id='hk_stock', params=hk_stock_params, url=None, exchange_extractor=lambda x:'HKEX')
 
 cookies = {
+    '__utmz': '1.1572180062.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)',
     'device_id': '8c96397a28a84671916e3a10765b3b41',
     's': 'do1967dh94',
     'bid': '783ea5e048552adebcc2fb818cf94d7a_ki4lux2p',
+    '__utma': '1.904466151.1572180062.1614520224.1615103657.34',
+    'Hm_lvt_fe218c11eab60b6ab1b6f84fb38bcc4a': '1615726259',
+    'cookiesu': '101616824176659',
+    'acw_tc': '2760820516171122618778358e63ba7f24a3bd5cc7798b33cf9907c60b516a',
+    'Hm_lvt_1db88642e346389874251b5a1eded6e3': '1614874129,1615948544,1616824177',
     'remember': '1',
-    'xq_a_token': '0be089f1b018e43e5cf4262b9095e0e2f9825a7a',
-    'xq_id_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjkzMDk1ODc2OTgsImlzcyI6InVjIiwiZXhwIjoxNjE2ODIxOTYyLCJjdG0iOjE2MTQyNjU1ODQxNDksImNpZCI6ImQ5ZDBuNEFadXAifQ.lI3sXiFv1Nxb4rs0-9x9iXqjV_83TARi_HaMT0n821xppoHSnckiHFeuD7rJo0H0eHXiUQ4xZboDxEIWHy2cfWQ2xynbcTtNk3C3odcI5dBYZf1GGm2BaLYw4DZzeUVsG3LJPbmXdGWlRwS9dQZxwMi14wXnXNldvj3u7CDFiFkwFKDQE4ss7ozB0sHBcNwb-me6mTL9TyTzQt48FweEgOtmc4VQ35iNjkaBXpvRI81AvvFXzAUIXmX6pzQ61Fru4sjqG49hDIcdxoSFlPaN9DrLrkQZ2EmBjRdgaOGNSR6xUYc1dw6V0YS3BP_OoGgoAh2HbbVvIlGlw02hknmrqQ',
-    'xqat': '0be089f1b018e43e5cf4262b9095e0e2f9825a7a',
-    'xq_r_token': '1632327c73c2b2412669e8fa864ac81d27831b78',
+    'xq_a_token': '5a26bb2371026ac9d13b8c31e5264c8d89c84d1f',
+    'xq_id_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjkzMDk1ODc2OTgsImlzcyI6InVjIiwiZXhwIjoxNjE5NDE2MTc1LCJjdG0iOjE2MTcxMTIyOTkzNDMsImNpZCI6ImQ5ZDBuNEFadXAifQ.OIZpdHIfpiFmv5vqTjVaNN7yUrAP74JV-W_Qntn39AkutfU4zYE6mINos-Eis_Yv_wlBF3MDhJyAmc_8XGJ2usk-Tg2IlsRJCoTyBej5q9UppdrilrUtjA16BCLVxpQAA9LHorI5z5GybVx_chly8RdPSB5eWtfmli_bsb_DKuZSJxU1ud197AcKRrfOxv2CHJefQr1an3djVg2NMBe8wvWdrvk4Wq-iI9sifUCpFgG6Z05Bbi-RzOCXWs8s3PSJUmfXpVH87XWrD0EN6hOzqe8E-5bGgefTyZhOwB5NnqW0JZ25SLyjPnJlj0NKVtKG79tfJEWMgzepCBNpiMNFNw',
+    'xqat': '5a26bb2371026ac9d13b8c31e5264c8d89c84d1f',
+    'xq_r_token': '6f1d86e5b38da729adf4c3ae9c14e5926a3cb72d',
     'xq_is_login': '1',
     'u': '9309587698',
     'is_overseas': '0',
-    'Hm_lvt_1db88642e346389874251b5a1eded6e3': '1612363687,1612552532,1613748264,1614512799',
-    'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1614512804',
+    'Hm_lpvt_1db88642e346389874251b5a1eded6e3': '1617112329',
 }
-
 xueqiu_client = data_source.XueQiuDataParser(cookies=cookies)
 
 grabListData(pid=5, tag_id='ZH_ETF')
