@@ -3,14 +3,14 @@ import datetime
 from a1chemy.util.option_greeks_calculator import merton, euro_implied_vol
 import numpy as np
 
-class Instrument(object):
+class Underlying(object):
     def __init__(self, price) -> None:
         self.price = price
 
 
 class Option(object):
     def __init__(self, redefine_greeks=False, **kargs):
-        self.instrument = kargs['instrument']
+        self.underlying= kargs['underlying']
 
         self.option_type = kargs['option_type']
         self.date = kargs['date']
@@ -25,7 +25,7 @@ class Option(object):
         self.rho = kargs.get('rho')
 
     def recalculate_greeks(self, r, q):
-        current_price = self.instrument.price
+        current_price = self.underlying.price
         t = float(np.busday_count( datetime.date.today(), self.date))/256
         self.iv = euro_implied_vol(self.option_type, fs=current_price, x=self.strike, t=t, r=r, q=q, cp=self.price)
         _, self.delta, self.gamma, self.theta, self.vega, self.rho = merton(self.option_type, fs=current_price, x=self.strike, t=t, r=r, q=q, v=self.iv)
