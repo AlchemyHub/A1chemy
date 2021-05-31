@@ -10,17 +10,17 @@ class SinaFinanceClient(object):
 
     def add_option_to_option_map(self, option_map, underlying, config, option_data):
         option_type = option_data[45].lower()
-        time_to_expire = datetime.date.fromisoformat(option_data[46])
+        time_to_expiry = datetime.date.fromisoformat(option_data[46])
         strike = float(option_data[7])
         price = float(option_data[2])
         option = option_map.get_option(
-            time_to_expire=time_to_expire, strike=strike, option_type=option_type)
+            time_to_expiry=time_to_expiry, strike=strike, option_type=option_type)
         if option is None:
             option = Option(redefine_greeks=True,
                             underlying=underlying,
                             config=config,
                             option_type=option_type,
-                            time_to_expire=time_to_expire,
+                            time_to_expiry=time_to_expiry,
                             strike=strike,
                             price=price
                             )
@@ -75,7 +75,7 @@ class SinaFinanceClient(object):
             'data': chain_data
         }
 
-    def get_option_map(self, symbol, year, month, config):
+    def get_option_map(self, option_map, symbol, year, month, config):
         chain = self.get_option_chain(symbol=symbol, year=year, month=month)
         chain_data = chain['data']
         underlying_price = float(chain_data[chain['keys']['underlying']][1])
@@ -87,7 +87,7 @@ class SinaFinanceClient(object):
             chain_data[put_list_name]
         option_data_map = self.get_options(symbols=option_symbol_list)
 
-        option_map = OptionMap()
+        # option_map = OptionMap()
         for symbol, o in option_data_map.items():
             option = self.add_option_to_option_map(
                 option_map, underlying, config, o)

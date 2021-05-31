@@ -22,7 +22,7 @@ class Option(object):
         self.config = kargs['config']
 
         self.option_type = kargs['option_type']
-        self.time_to_expire = kargs['time_to_expire']
+        self.time_to_expiry = kargs['time_to_expiry']
         self.strike = kargs['strike']
 
         self.update(redefine_greeks=redefine_greeks, **kargs)
@@ -42,7 +42,7 @@ class Option(object):
     def recalculate_greeks(self):
         underlying_price = self.underlying.price
         t = float(np.busday_count(
-            datetime.date.today(), self.time_to_expire))/256
+            datetime.date.today(), self.time_to_expiry))/256
         # self.iv = euro_implied_vol(self.option_type, fs=current_price, x=self.strike, t=t, r=r, q=q, cp=self.price)
         # _, self.delta, self.gamma, self.theta, self.vega, self.rho = merton(self.option_type, fs=current_price, x=self.strike, t=t, r=r, q=q, v=self.iv)
         pricing_model = self.config.pricing_model
@@ -53,12 +53,12 @@ class Option(object):
                 self.iv = 0.0001
         except:
             self.iv = 0.0001
-            print('get iv failed, set 0.0001 default,option: {} {}'.format(self.time_to_expire, self.strike))
+            print('get iv failed, set 0.0001 default,option: {} {}'.format(self.time_to_expiry, self.strike))
         
         _, self.delta, self.gamma, self.theta, self.vega = pricing_model.calculate_greeks(underlying_price, self.strike, self.config.interest_rate, t, self.iv, cp)
 
     def toString(self):
-        return 'expire:{} strike:{} type:{} iv:{} delta:{} gamma:{} theta:{} vega:{}'.format(self.time_to_expire, self.strike,  self.option_type, self.iv, self.delta, self.gamma, self.theta, self.vega)
+        return 'expire:{} strike:{} type:{} iv:{} delta:{} gamma:{} theta:{} vega:{}'.format(self.time_to_expiry, self.strike,  self.option_type, self.iv, self.delta, self.gamma, self.theta, self.vega)
 
 
 class OptionStraddle(object):
@@ -81,8 +81,8 @@ class OptionStraddle(object):
 
 
 class OptionChain(object):
-    def __init__(self, time_to_expire):
-        self.time_to_expire = time_to_expire
+    def __init__(self, time_to_expiry):
+        self.time_to_expiry = time_to_expiry
         self.straddles = []
         self.index = {}
 
@@ -111,19 +111,36 @@ class OptionMap(object):
         self.chains = []
 
     def add_option(self, option: Option):
-        chain = self.index.get(option.time_to_expire)
+        chain = self.index.get(option.time_to_expiry)
         if chain is None:
-            chain = OptionChain(time_to_expire=option.time_to_expire)
+            chain = OptionChain(time_to_expiry=option.time_to_expiry)
             self.chains.append(chain)
             self.chains = sorted(
-                self.chains, key=operator.attrgetter('time_to_expire'))
-            self.index[option.time_to_expire] = chain
+                self.chains, key=operator.attrgetter('time_to_expiry'))
+            self.index[option.time_to_expiry] = chain
 
         chain.add_option(option=option)
 
-    def get_option(self, time_to_expire, strike, option_type):
-        chain = self.index.get(time_to_expire, None)
+    def get_option(self, time_to_expiry, strike, option_type):
+        chain = self.index.get(time_to_expiry, None)
         if chain is None:
             return None
         else:
             return chain.get_option(strike, option_type)
+
+    def add_or_update_option(self, underlying, config, option_type, time_to_expiry, strike, price):
+        option = self.get_option(
+            time_to_expiry=time_to_expiry, strike=strike, option_type=option_type)
+        if option is None:
+            option = Option(redefine_greeks=True,
+                            underlying=underlying,
+                            config=config,
+                            option_type=option_type,
+                            time_to_expiry=time_to_expiry,
+                            strike=strike,
+                            price=price
+                            )
+            self.add_option(option)
+        else:
+            option.update(redefine_greeks=True, price=price)
+        return option
