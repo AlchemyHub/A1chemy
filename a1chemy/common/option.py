@@ -48,14 +48,26 @@ class Option(object):
         pricing_model = self.config.pricing_model
         cp = 1 if self.option_type == 'c' else -1
         try:
-            self.iv = pricing_model.calculate_impv(self.price, underlying_price, self.strike, self.config.interest_rate, t, cp)
+            self.iv = pricing_model.calculate_impv(
+                self.price, underlying_price, self.strike, self.config.interest_rate, t, cp)
             if self.iv <= 0:
                 self.iv = 0.0001
         except:
             self.iv = 0.0001
-            print('get iv failed, set 0.0001 default,option: {} {}'.format(self.time_to_expiry, self.strike))
-        
-        _, self.delta, self.gamma, self.theta, self.vega = pricing_model.calculate_greeks(underlying_price, self.strike, self.config.interest_rate, t, self.iv, cp)
+            print('get iv failed, set 0.0001 default,option: {} {}'.format(
+                self.time_to_expiry, self.strike))
+
+        _, self.delta, self.gamma, self.theta, self.vega = pricing_model.calculate_greeks(
+            underlying_price, self.strike, self.config.interest_rate, t, self.iv, cp)
+
+    def recalculate_new_price(self, iv_diff, underlying_price_diff):
+        t = float(np.busday_count(
+            datetime.date.today(), self.time_to_expiry))/256
+        pricing_model = self.config.pricing_model
+        cp = 1 if self.option_type == 'c' else -1
+        iv = self.iv + iv_diff
+        underlying_price = self.underlying.price + underlying_price_diff
+        return pricing_model.calculate_greeks(underlying_price, self.strike, self.config.interest_rate, t, iv, cp)[0]
 
     def toString(self):
         return 'expire:{} strike:{} type:{} iv:{} delta:{} gamma:{} theta:{} vega:{}'.format(self.time_to_expiry, self.strike,  self.option_type, self.iv, self.delta, self.gamma, self.theta, self.vega)
