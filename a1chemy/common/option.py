@@ -60,9 +60,9 @@ class Option(object):
         _, self.delta, self.gamma, self.theta, self.vega = pricing_model.calculate_greeks(
             underlying_price, self.strike, self.config.interest_rate, t, self.iv, cp)
 
-    def recalculate_new_price(self, iv_diff, underlying_price_diff):
-        t = float(np.busday_count(
-            datetime.date.today(), self.time_to_expiry))/256
+    def recalculate_new_price(self, iv_diff, underlying_price_diff, time_diff):
+        t = (float(np.busday_count(
+            datetime.date.today(), self.time_to_expiry)) + time_diff)/256
         pricing_model = self.config.pricing_model
         cp = 1 if self.option_type == 'c' else -1
         iv = self.iv + iv_diff

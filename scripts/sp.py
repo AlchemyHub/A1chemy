@@ -6,6 +6,8 @@ import time
 from a1chemy.common import Tag
 from a1chemy.util import json_util
 import json
+import pytz
+tzinfo = pytz.timezone('Asia/Shanghai')
 
 mongo_client = pymongo.MongoClient("mongodb://localhost:27017/", username='a1chemy', password='1B2C9046-E3CC-447F-9961-E125759BA44F')
 mongo_ticks_client = data_source.MongoTicks(mongo_client=mongo_client)

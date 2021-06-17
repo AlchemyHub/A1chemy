@@ -87,7 +87,6 @@ class SinaFinanceClient(object):
             chain_data[put_list_name]
         option_data_map = self.get_options(symbols=option_symbol_list)
 
-        # option_map = OptionMap()
         for symbol, o in option_data_map.items():
             option = self.add_option_to_option_map(
                 option_map, underlying, config, o)
