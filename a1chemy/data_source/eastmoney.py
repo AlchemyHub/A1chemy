@@ -16,7 +16,7 @@ class EastMoneyClient(object):
         main_page_response = requests.get('https://www.eastmoney.com/', headers=self.headers)
         self.cookies = main_page_response.cookies
 
-    def get_option_data(self, underlying, config, option_map, symbol, time_to_expiry):
+    def get_option_data(self, underlying, config, option_map, symbol, time_to_expiry, filter_strike=False):
         params = (
             ('cb', 'jQuery112409759288850343608_1622469571884'),
             ('secid', '1.' + symbol[2:]),
@@ -38,5 +38,7 @@ class EastMoneyClient(object):
         data = json.loads(response.text.replace(params[0][1], '')[1:-2])['data']['diff']
         for item in data:
             strike = item['f161']
+            if filter_strike and not (strike*20).is_integer():
+                continue
             option_map.add_or_update_option(underlying=underlying, config=config, option_type='c', time_to_expiry=time_to_expiry, strike=strike, price=item['f2'])
             option_map.add_or_update_option(underlying=underlying, config=config, option_type='p', time_to_expiry=time_to_expiry, strike=strike, price=item['f341'])
