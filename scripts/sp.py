@@ -35,9 +35,9 @@ def grabNationData(nation_tag_id, params, url, exchange_extractor):
         #print("tag: id={}, parent={}, values={}".format(tag.id, tag.parent, values))
 
 def grabListData(pid, tag_id):
-    mongo_tag_client.tags_collection.delete_many({'parent':tag_id})
     all_stocks=xueqiu_client.list(pid=pid)
     print("stocks size=" + str(len(all_stocks)))
+    mongo_tag_client.tags_collection.delete_many({'parent':tag_id})
     list_tag = Tag(id=tag_id, parent=None)
     mongo_tag_client.insert(tag=list_tag)
     for stock in tqdm(all_stocks):
@@ -143,9 +143,9 @@ grabNationData(nation_tag_id='hk_stock', params=hk_stock_params, url=None, excha
 grabTicksData(nation_tag_id='hk_stock', params=hk_stock_params, url=None, exchange_extractor=lambda x:'HKEX')
 
 
-xueqiu_client = data_source.XueQiuDataParser(cookies=cookies)
+# xueqiu_client = data_source.XueQiuDataParser(cookies=cookies)
 
-grabListData(pid=5, tag_id='ZH_ETF')
-grabListData(pid=13, tag_id='TOP')
-grabListData(pid=14, tag_id='CASH_COW')
-grabListData(pid=11, tag_id='ZH_STOCK')
+# grabListData(pid=5, tag_id='ZH_ETF')
+# grabListData(pid=13, tag_id='TOP')
+# grabListData(pid=14, tag_id='CASH_COW')
+# grabListData(pid=11, tag_id='ZH_STOCK')

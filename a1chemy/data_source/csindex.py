@@ -18,11 +18,23 @@ headers = {
 
 
 def get_cookies():
-    response = requests.get('https://www.jisilu.cn/', headers=headers)
+    response = requests.get('http://www.csindex.com.cn/', headers=headers)
     return response.cookies
 
 def download_csi_xls(url, xls_path):
     pattern = re.compile('.*成份列表.*')
+    cookies = get_cookies()
+    html_page = requests.get(url, headers=headers, cookies=cookies, verify=False)
+    soup = BeautifulSoup(html_page.content, 'lxml')
+    results = soup.find_all(text=pattern)
+    xls_url = results[0].parent['href'] if len(results) is 1 else None
+    print("xls_url=" + xls_url)
+    f = requests.get(xls_url, headers=headers, cookies=cookies, verify=False)
+    with open(xls_path, "wb") as target_file:
+        target_file.write(f.content)
+
+def download_csi_sectors_xls(url, xls_path):
+    pattern = re.compile('.*中证行业分类表.*')
     cookies = get_cookies()
     html_page = requests.get(url, headers=headers, cookies=cookies, verify=False)
     soup = BeautifulSoup(html_page.content, 'lxml')

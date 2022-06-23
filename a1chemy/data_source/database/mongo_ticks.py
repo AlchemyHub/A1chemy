@@ -1,6 +1,7 @@
 from a1chemy.common.constants import INDEX
 from a1chemy.common.ticks import Ticks
 import pandas as pd
+import pymongo
 
 
 class MongoTicks(object):
@@ -22,6 +23,28 @@ class MongoTicks(object):
 
         new_value = {'$set': ticks.to_dict()}
         return self.ticks_collection.update_one(query, new_value, upsert=True)
+
+    def bulk_upsert(self, ticks_list=[]):
+        upsert_list = []
+        for ticks_data in ticks_list:
+            query = {
+                'symbol': ticks_data['symbol']
+            }
+            exchange = ticks_data.get('exchange')
+            if exchange is not None:
+                query['exchange'] = exchange
+            new_value = {'$set': ticks_data['ticks'].to_dict()}
+            ticks_update_one = pymongo.UpdateOne(query, new_value, upsert=True)
+            upsert_list.append(ticks_update_one)
+        return self.ticks_collection.bulk_write(upsert_list)
+
+    def delete_multiple(self, symbols=[]):
+        query = {
+            'symbol': {
+                '$in': symbols
+            }
+        }
+        return self.ticks_collection.delete_many(query)
 
     def delete(self, exchange: str, symbol: str):
         query = {

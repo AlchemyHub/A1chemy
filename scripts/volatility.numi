@@ -1,0 +1,5 @@
+hv_20 = 26 = 26
+hv_256 = 31 = 31
+days = 20 = 20
+min_change = hv_20 * sqrt(days/256) = 7.27
+max_change = hv_256 * sqrt(days/256) = 8.66
