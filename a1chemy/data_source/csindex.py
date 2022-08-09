@@ -22,14 +22,8 @@ def get_cookies():
     return response.cookies
 
 def download_csi_xls(url, xls_path):
-    pattern = re.compile('.*成份列表.*')
     cookies = get_cookies()
-    html_page = requests.get(url, headers=headers, cookies=cookies, verify=False)
-    soup = BeautifulSoup(html_page.content, 'lxml')
-    results = soup.find_all(text=pattern)
-    xls_url = results[0].parent['href'] if len(results) is 1 else None
-    print("xls_url=" + xls_url)
-    f = requests.get(xls_url, headers=headers, cookies=cookies, verify=False)
+    f = requests.get(url, headers=headers, cookies=cookies, verify=False)
     with open(xls_path, "wb") as target_file:
         target_file.write(f.content)
 
